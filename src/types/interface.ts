@@ -1,9 +1,10 @@
 export interface IMoviesData {
-  _id: String;
-  title: String;
-  image: String;
+  _id: string;
+  title: string;
+  image: string;
+  description: string;
   rating: number;
-  vote: Number;
-  genre: Number;
-  year: Number;
+  vote: number;
+  genre: number;
+  year: number;
 }
