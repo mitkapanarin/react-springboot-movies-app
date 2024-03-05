@@ -11,6 +11,22 @@ export const DataAPI = createApi({
       query: () => `/movies`,
       providesTags: ["Movies"],
     }),
+    postOneMovie: builder.mutation<IMoviesData, Partial<IMoviesData>>({
+      query: (body) => ({
+        url: `/movies`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Movies"],
+    }),
+    deleteOneMovie: builder.mutation<IMoviesData, Pick<IMoviesData, "_id">>({
+      query: ({ _id }) => ({
+        url: `/movies/${_id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Movies"],
+    }),
+    // updateOneMovie: builder.mutation<IMoviesData, IMoviesData>({}),
     getOneMovieById: builder.query<IMoviesData, Pick<IMoviesData, "_id">>({
       query: ({ _id }) => `/movies/${_id}`,
       providesTags: ["Movies"],
@@ -20,4 +36,9 @@ export const DataAPI = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetAllMoviesQuery, useGetOneMovieByIdQuery } = DataAPI;
+export const {
+  useGetAllMoviesQuery,
+  useGetOneMovieByIdQuery,
+  usePostOneMovieMutation,
+  useDeleteOneMovieMutation,
+} = DataAPI;

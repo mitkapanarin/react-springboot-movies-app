@@ -3,6 +3,8 @@ import {
   DataAPI,
   useGetAllMoviesQuery,
   useGetOneMovieByIdQuery,
+  usePostOneMovieMutation,
+  useDeleteOneMovieMutation,
 } from "./API/DataAPI";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
@@ -23,4 +25,9 @@ export type RootState = ReturnType<typeof store.getState>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
 
-export { useGetAllMoviesQuery, useGetOneMovieByIdQuery };
+export {
+  useGetAllMoviesQuery,
+  useGetOneMovieByIdQuery,
+  usePostOneMovieMutation,
+  useDeleteOneMovieMutation,
+};
