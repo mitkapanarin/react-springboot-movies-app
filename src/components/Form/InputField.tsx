@@ -15,6 +15,8 @@ const InputField: FC<iInputFieldPros> = ({
   disabled,
   description,
   accept,
+  min,
+  max,
 }) => {
   return (
     <div className="grid gap-2">
@@ -30,6 +32,8 @@ const InputField: FC<iInputFieldPros> = ({
           required={required}
           disabled={disabled}
           accept={accept}
+          min={min}
+          max={max}
         />
         {description && <p className="text-sm text-gray-500">{description}</p>}
       </div>

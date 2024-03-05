@@ -1,3 +1,4 @@
+import { HTMLInputTypeAttribute } from "react";
 import { IHTMLInputTypeChange } from "./types";
 
 export interface IMoviesData {
@@ -9,12 +10,16 @@ export interface IMoviesData {
   vote: number;
   genre: string;
   year: number;
+  stats?: {
+    rating: number[];
+    review: string[];
+  };
 }
 
 export interface iInputFieldPros {
   id?: string;
   name: string;
-  type: string;
+  type: HTMLInputTypeAttribute;
   placeholder: string;
   label: string;
   value?: string | number;
@@ -23,6 +28,8 @@ export interface iInputFieldPros {
   disabled?: boolean;
   description?: string;
   accept?: string;
+  min?: number;
+  max?: number;
 }
 
 export interface IDropdownOptions {

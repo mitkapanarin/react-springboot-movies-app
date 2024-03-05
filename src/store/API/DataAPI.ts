@@ -38,6 +38,18 @@ export const DataAPI = createApi({
       query: ({ _id }) => `/movies/${_id}`,
       providesTags: ["Movies"],
     }),
+
+    submitReview: builder.mutation<
+      IMoviesData,
+      { _id: string; review: string; rating: number }
+    >({
+      query: ({ _id, review, rating }) => ({
+        url: `/movies/${_id}/review`,
+        method: "POST",
+        body: { review, rating },
+      }),
+      invalidatesTags: ["Movies"],
+    }),
   }),
 });
 
@@ -49,4 +61,5 @@ export const {
   usePostOneMovieMutation,
   useDeleteOneMovieMutation,
   useUpdateOneMovieMutation,
+  useSubmitReviewMutation,
 } = DataAPI;

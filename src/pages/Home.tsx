@@ -10,6 +10,7 @@ import {
   usePostOneMovieMutation,
   useDeleteOneMovieMutation,
   useUpdateOneMovieMutation,
+  useSubmitReviewMutation,
 } from "@/store/store";
 import { GenreEnum } from "@/types/enum";
 import { IMoviesData } from "@/types/interface";
@@ -22,8 +23,9 @@ const Home = () => {
   const [postOneMovie] = usePostOneMovieMutation();
   const [deleteOneMovie] = useDeleteOneMovieMutation();
   const [updateOneMovie] = useUpdateOneMovieMutation();
+  const [submitReview] = useSubmitReviewMutation();
 
-  const initialState: IMoviesData = {
+  const initialState: Partial<IMoviesData> = {
     description: "",
     genre: genreOptions[0].value,
     image: "",
@@ -31,11 +33,26 @@ const Home = () => {
     title: "",
     vote: 0,
     year: 0,
-  } as IMoviesData;
+    stats: {
+      rating: [],
+      review: [],
+    },
+  };
 
-  const [newMovie, setNewMovie] = useState<IMoviesData>(
-    initialState as IMoviesData,
-  );
+  const [newMovie, setNewMovie] = useState<Partial<IMoviesData>>(initialState);
+
+  const submitReviewFn = async (
+    _id: string,
+    reviewState: {
+      review: string;
+      rating: number;
+    },
+  ) =>
+    toast.promise(submitReview({ _id, ...reviewState }).unwrap(), {
+      loading: "Submitting Review...",
+      success: "Review Submitted Successfully",
+      error: "Error Occured, please try again later",
+    });
 
   const handleUpdate = async (data: IMoviesData) =>
     toast.promise(updateOneMovie(data).unwrap(), {
@@ -121,7 +138,7 @@ const Home = () => {
                 })
               }
               options={genreOptions}
-              value={newMovie.genre}
+              value={newMovie.genre as GenreEnum}
               required
             />
             <InputField
@@ -142,17 +159,26 @@ const Home = () => {
           </div>
         </EventModal>
       </div>
-      <PaginationComponent />
-      <div className="my-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 justify-center">
-        {data?.map((item: IMoviesData) => (
-          <MovieCard
-            key={item?._id}
-            {...item}
-            deleteFn={handleDelete}
-            updateFn={handleUpdate}
-          />
-        ))}
-      </div>
+      {data?.length == 0 ? (
+        <h1 className="text-2xl font-semibold text-center my-10 text-red-400">
+          No Movies to display, please add some to database
+        </h1>
+      ) : (
+        <>
+          <PaginationComponent />
+          <div className="my-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 justify-center">
+            {data?.map((item: IMoviesData) => (
+              <MovieCard
+                key={item?._id}
+                {...item}
+                deleteFn={handleDelete}
+                updateFn={handleUpdate}
+                reviewFn={submitReviewFn}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

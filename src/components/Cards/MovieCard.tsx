@@ -24,6 +24,10 @@ const MovieCard: FC<
   IMoviesData & {
     deleteFn: (id: string) => void;
     updateFn: (data: IMoviesData) => void;
+    reviewFn: (
+      id: string,
+      reviewState: { review: string; rating: number },
+    ) => void;
   }
 > = ({
   _id,
@@ -36,6 +40,7 @@ const MovieCard: FC<
   description,
   deleteFn,
   updateFn,
+  reviewFn,
 }) => {
   const [data, setData] = useState<IMoviesData>({
     _id,
@@ -46,6 +51,11 @@ const MovieCard: FC<
     year,
     description,
     vote,
+  });
+
+  const [reviewState, setReviewState] = useState({
+    rating: 0,
+    review: "",
   });
 
   return (
@@ -146,7 +156,7 @@ const MovieCard: FC<
       <CardContent className="p-4 py-0 flex gap-2 flex-wrap">
         <Button variant="outline" size="sm" className="flex gap-1">
           <CiStar className="w-6 h-6" />
-          <p>{rating}</p>
+          <p>{rating.toFixed(1)}</p>
         </Button>
         <Button variant="outline" size="sm" className="flex gap-1">
           <CiCalendar className="w-6 h-6" />
@@ -159,9 +169,49 @@ const MovieCard: FC<
         </Button>
       </CardContent>
       <CardFooter className="flex justify-between p-4 gap-2">
-        <Button size="sm" className="w-full">
-          Vote
-        </Button>
+        <EventModal
+          dialogueTitle={`Vote for Movie: ${title}`}
+          confirmButtonText="Vote"
+          dialogueDescription="Once you're done, click on the button below to vote for the movie."
+          onConfirm={() => reviewFn(_id, reviewState) as any}
+          button={
+            <Button size="sm" className="w-full">
+              Vote
+            </Button>
+          }
+        >
+          <div className="flex flex-col gap-2 my-4">
+            <InputField
+              label="Your Rating"
+              name="rating"
+              onChange={(e) =>
+                setReviewState({
+                  ...reviewState,
+                  rating: Number(e.target.value),
+                })
+              }
+              type="number"
+              min={0}
+              max={10}
+              placeholder="Enter Rating Here"
+              description="Between 0 and 10, Rate the movie you want to vote for"
+              required
+              value={reviewState.rating}
+            />
+            <InputField
+              label="Your Review"
+              name="review"
+              onChange={(e) =>
+                setReviewState({ ...reviewState, review: e.target.value })
+              }
+              type="text"
+              description="Write a short review of the movie you want to vote for."
+              placeholder="Enter Review Here"
+              required
+              value={reviewState.review}
+            />
+          </div>
+        </EventModal>
         <Link to={`/movies/${_id}`} className="w-full">
           <Button size="sm" className="w-full">
             View Details
