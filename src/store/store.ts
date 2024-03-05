@@ -5,6 +5,7 @@ import {
   useGetOneMovieByIdQuery,
   usePostOneMovieMutation,
   useDeleteOneMovieMutation,
+  useUpdateOneMovieMutation,
 } from "./API/DataAPI";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
@@ -30,4 +31,5 @@ export {
   useGetOneMovieByIdQuery,
   usePostOneMovieMutation,
   useDeleteOneMovieMutation,
+  useUpdateOneMovieMutation,
 };

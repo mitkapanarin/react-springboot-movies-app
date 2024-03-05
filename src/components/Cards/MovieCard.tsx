@@ -7,17 +7,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { IMoviesData } from "@/types/interface";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Button } from "../ui/button";
 import { CiStar, CiCalendar } from "react-icons/ci";
 import { BiCategory } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { MdModeEdit } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
+import EventModal from "../Modals/EventModal";
+import InputField from "../Form/InputField";
+import SelectField from "../Form/SelectField";
+import { GenreEnum } from "@/types/enum";
+import { genreOptions } from "@/types/options";
 
 const MovieCard: FC<
   IMoviesData & {
     deleteFn: (id: string) => void;
+    updateFn: (data: IMoviesData) => void;
   }
 > = ({
   _id,
@@ -25,11 +31,23 @@ const MovieCard: FC<
   image,
   rating,
   title,
-  // vote,
+  vote,
   year,
   description,
   deleteFn,
+  updateFn,
 }) => {
+  const [data, setData] = useState<IMoviesData>({
+    _id,
+    genre,
+    image,
+    rating,
+    title,
+    year,
+    description,
+    vote,
+  });
+
   return (
     <Card className="">
       <img src={image ? image : "/no-image-available.svg"} alt="" />
@@ -37,9 +55,82 @@ const MovieCard: FC<
         <CardTitle className="flex justify-between items-center">
           <h1 className="capitalize">{title}</h1>
           <div className="flex gap-2">
-            <Button size="sm" variant="secondary" className="text-sm">
-              <MdModeEdit className="w-4 h-4" />
-            </Button>
+            <EventModal
+              dialogueTitle="Edit Movie"
+              confirmButtonText="Update Movie"
+              dialogueDescription="Once you're done, click on the button below to update the movie details."
+              onConfirm={() =>
+                updateFn({
+                  ...data,
+                  _id,
+                }) as any
+              }
+              button={
+                <Button size="sm" variant="secondary" className="text-sm">
+                  <MdModeEdit className="w-4 h-4" />
+                </Button>
+              }
+            >
+              <div className="flex flex-col gap-2 my-4">
+                <InputField
+                  label="Movie Title"
+                  name="title"
+                  placeholder="Enter Movie Title"
+                  type="text"
+                  description="Enter the title of the movie you want to add."
+                  required
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      title: e.target.value,
+                    })
+                  }
+                  value={data.title}
+                />
+                <InputField
+                  label="Publish Year"
+                  name="year"
+                  placeholder="Enter Publish Year"
+                  type="number"
+                  description="When was the movie published? Enter the year here."
+                  required
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      year: Number(e.target.value),
+                    })
+                  }
+                  value={data.year}
+                />
+                <SelectField
+                  label="Genre"
+                  onValueChange={(e: GenreEnum) =>
+                    setData({
+                      ...data,
+                      genre: e,
+                    })
+                  }
+                  options={genreOptions}
+                  value={data.genre}
+                  required
+                />
+                <InputField
+                  label="Description"
+                  name="description"
+                  placeholder="Enter Description"
+                  type="text"
+                  description="Write a short description of the movie you want to add."
+                  required
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      description: e.target.value,
+                    })
+                  }
+                  value={data.description}
+                />
+              </div>
+            </EventModal>
             <Button
               onClick={() => deleteFn(_id)}
               size="sm"

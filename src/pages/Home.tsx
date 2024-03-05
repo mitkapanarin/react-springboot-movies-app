@@ -9,6 +9,7 @@ import {
   useGetAllMoviesQuery,
   usePostOneMovieMutation,
   useDeleteOneMovieMutation,
+  useUpdateOneMovieMutation,
 } from "@/store/store";
 import { GenreEnum } from "@/types/enum";
 import { IMoviesData } from "@/types/interface";
@@ -20,6 +21,7 @@ const Home = () => {
   const { data, isLoading, isFetching, isError } = useGetAllMoviesQuery();
   const [postOneMovie] = usePostOneMovieMutation();
   const [deleteOneMovie] = useDeleteOneMovieMutation();
+  const [updateOneMovie] = useUpdateOneMovieMutation();
 
   const initialState: IMoviesData = {
     description: "",
@@ -34,6 +36,13 @@ const Home = () => {
   const [newMovie, setNewMovie] = useState<IMoviesData>(
     initialState as IMoviesData,
   );
+
+  const handleUpdate = async (data: IMoviesData) =>
+    toast.promise(updateOneMovie(data).unwrap(), {
+      loading: "Updating Movie...",
+      success: "Movie Updated Successfully",
+      error: "Error Occured, please try again later",
+    });
 
   const handleDelete = async (_id: string) =>
     toast.promise(deleteOneMovie({ _id }).unwrap(), {
@@ -136,7 +145,12 @@ const Home = () => {
       <PaginationComponent />
       <div className="my-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 justify-center">
         {data?.map((item: IMoviesData) => (
-          <MovieCard key={item?._id} {...item} deleteFn={handleDelete} />
+          <MovieCard
+            key={item?._id}
+            {...item}
+            deleteFn={handleDelete}
+            updateFn={handleUpdate}
+          />
         ))}
       </div>
     </div>

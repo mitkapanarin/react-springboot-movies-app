@@ -26,7 +26,14 @@ export const DataAPI = createApi({
       }),
       invalidatesTags: ["Movies"],
     }),
-    // updateOneMovie: builder.mutation<IMoviesData, IMoviesData>({}),
+    updateOneMovie: builder.mutation<IMoviesData, IMoviesData>({
+      query: ({ _id, ...body }) => ({
+        url: `/movies/${_id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["Movies"],
+    }),
     getOneMovieById: builder.query<IMoviesData, Pick<IMoviesData, "_id">>({
       query: ({ _id }) => `/movies/${_id}`,
       providesTags: ["Movies"],
@@ -41,4 +48,5 @@ export const {
   useGetOneMovieByIdQuery,
   usePostOneMovieMutation,
   useDeleteOneMovieMutation,
+  useUpdateOneMovieMutation,
 } = DataAPI;
