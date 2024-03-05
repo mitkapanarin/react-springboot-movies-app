@@ -22,7 +22,7 @@ import { genreOptions } from "@/types/options";
 
 const MovieCard: FC<
   IMoviesData & {
-    deleteFn: (id: string) => void;
+    deleteFn?: (id: string) => void;
     updateFn: (data: IMoviesData) => void;
     reviewFn: (
       id: string,
@@ -65,90 +65,95 @@ const MovieCard: FC<
         <CardTitle className="flex justify-between items-center">
           <h1 className="capitalize">{title}</h1>
           <div className="flex gap-2">
-            <EventModal
-              dialogueTitle="Edit Movie"
-              confirmButtonText="Update Movie"
-              dialogueDescription="Once you're done, click on the button below to update the movie details."
-              onConfirm={() =>
-                updateFn({
-                  ...data,
-                  _id,
-                }) as any
-              }
-              button={
-                <Button size="sm" variant="secondary" className="text-sm">
-                  <MdModeEdit className="w-4 h-4" />
-                </Button>
-              }
-            >
-              <div className="flex flex-col gap-2 my-4">
-                <InputField
-                  label="Movie Title"
-                  name="title"
-                  placeholder="Enter Movie Title"
-                  type="text"
-                  description="Enter the title of the movie you want to add."
-                  required
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      title: e.target.value,
-                    })
-                  }
-                  value={data.title}
-                />
-                <InputField
-                  label="Publish Year"
-                  name="year"
-                  placeholder="Enter Publish Year"
-                  type="number"
-                  description="When was the movie published? Enter the year here."
-                  required
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      year: Number(e.target.value),
-                    })
-                  }
-                  value={data.year}
-                />
-                <SelectField
-                  label="Genre"
-                  onValueChange={(e: GenreEnum) =>
-                    setData({
-                      ...data,
-                      genre: e,
-                    })
-                  }
-                  options={genreOptions}
-                  value={data.genre}
-                  required
-                />
-                <InputField
-                  label="Description"
-                  name="description"
-                  placeholder="Enter Description"
-                  type="text"
-                  description="Write a short description of the movie you want to add."
-                  required
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      description: e.target.value,
-                    })
-                  }
-                  value={data.description}
-                />
-              </div>
-            </EventModal>
-            <Button
-              onClick={() => deleteFn(_id)}
-              size="sm"
-              variant="destructive"
-              className="text-xs"
-            >
-              <FaRegTrashAlt className="w-4 h-4" />
-            </Button>
+            {updateFn && (
+              <EventModal
+                dialogueTitle="Edit Movie"
+                confirmButtonText="Update Movie"
+                dialogueDescription="Once you're done, click on the button below to update the movie details."
+                onConfirm={() =>
+                  updateFn({
+                    ...data,
+                    _id,
+                  }) as any
+                }
+                button={
+                  <Button size="sm" variant="secondary" className="text-sm">
+                    <MdModeEdit className="w-4 h-4" />
+                  </Button>
+                }
+              >
+                <div className="flex flex-col gap-2 my-4">
+                  <InputField
+                    label="Movie Title"
+                    name="title"
+                    placeholder="Enter Movie Title"
+                    type="text"
+                    description="Enter the title of the movie you want to add."
+                    required
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        title: e.target.value,
+                      })
+                    }
+                    value={data.title}
+                  />
+                  <InputField
+                    label="Publish Year"
+                    name="year"
+                    placeholder="Enter Publish Year"
+                    type="number"
+                    description="When was the movie published? Enter the year here."
+                    required
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        year: Number(e.target.value),
+                      })
+                    }
+                    value={data.year}
+                  />
+                  <SelectField
+                    label="Genre"
+                    onValueChange={(e: GenreEnum) =>
+                      setData({
+                        ...data,
+                        genre: e,
+                      })
+                    }
+                    options={genreOptions}
+                    value={data.genre}
+                    required
+                  />
+                  <InputField
+                    label="Description"
+                    name="description"
+                    placeholder="Enter Description"
+                    type="text"
+                    description="Write a short description of the movie you want to add."
+                    required
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        description: e.target.value,
+                      })
+                    }
+                    value={data.description}
+                  />
+                </div>
+              </EventModal>
+            )}
+
+            {deleteFn && (
+              <Button
+                onClick={() => deleteFn(_id)}
+                size="sm"
+                variant="destructive"
+                className="text-xs"
+              >
+                <FaRegTrashAlt className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </CardTitle>
         <CardDescription className="">{description}</CardDescription>
@@ -156,7 +161,7 @@ const MovieCard: FC<
       <CardContent className="p-4 py-0 flex gap-2 flex-wrap">
         <Button variant="outline" size="sm" className="flex gap-1">
           <CiStar className="w-6 h-6" />
-          <p>{rating.toFixed(1)}</p>
+          <p>{+rating ? +rating?.toFixed(1) : 0}</p>
         </Button>
         <Button variant="outline" size="sm" className="flex gap-1">
           <CiCalendar className="w-6 h-6" />
