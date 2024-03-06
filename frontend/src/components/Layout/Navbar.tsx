@@ -5,7 +5,7 @@ const Navbar = () => {
     <div className="container max-w-8xl flex justify-between my-6 items-center">
       <h1 className="text-xl font-semibold">Movies Database</h1>
       <a
-        href="https://speeding-resonance-761807.postman.co/workspace/springboot-movies-database~cd732020-c88a-4bad-bc4f-7f76b67aa84f/collection/18531452-ac9a4d97-0917-4b61-a303-edd8661fd1ff"
+         href="https://www.postman.com/speeding-resonance-761807/workspace/react-springboot-movies-app/collection/27719286-b864e46d-b94d-4288-a398-f57744cbdebc"
         target="_blank"
       >
         <Button size="sm">Postman API Docs</Button>
