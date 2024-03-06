@@ -18,5 +18,7 @@ Review Movies: Optionally, leave a review for a movie to share your thoughts.
 
 ### Project Structure
 Backend: Spring Boot with Java 21, supporting essential API endpoints.
+
 Database: MongoDB for structured data storage.
+
 Frontend: JavaScript-based
